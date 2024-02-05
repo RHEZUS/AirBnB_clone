@@ -4,6 +4,7 @@ Contains the BaseModel module
 """
 import uuid
 from datetime import datetime
+import storage
 
 
 class BaseModel:
@@ -20,6 +21,7 @@ class BaseModel:
             self.id = args[0]
             self.created_at = args[1]
             self.updated_at = args[2]
+            storage.new(self)
 
         elif not args and kwargs:
             self.id = kwargs['id']
@@ -29,11 +31,13 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
     
     def __str__(self):
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
     
     def save(self):
+        storage.save(self)
         self.updated_at = datetime.now()
 
     def to_dict(self):
