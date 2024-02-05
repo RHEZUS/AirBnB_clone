@@ -3,7 +3,6 @@
 and deserializes JSON file to instances"""
 
 import json
-from models.base_model import BaseModel
 
 class FileStorage:
     """Represent storage engine."""
@@ -18,25 +17,25 @@ class FileStorage:
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id
         """
-        new_name = obj.__class__.name
-        FileStorage.__object["{}.{}".format(new_name, obj.id)] = obj
+        new_name = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(new_name, obj.id)] = obj.to_dict()
 
     def save(self):
         """serializes __objects to the JSON file (path: __file_path)
         """
-        path_save = FileStorage.__objects
-        path_self = {obj: path_save[obj].to_dict() for obj in path_save.keys()}
+        objects = FileStorage.__objects
         with open(FileStorage.__file_path, "w") as f:
-            json.dump(path_self, f)
+            json.dump(objects, f)
 
     def reload(self):
         """deserializes the JSON file to __objects (only if the JSON file (__file_path) exists
         otherwise, do nothing. If the file doesn’t exist, no exception should be raised)
         """
         try:
-            with open(FileStorage.__file_path, "w", encoding="utf8") as f:
+            with open(FileStorage.__file_path, "r", encoding="utf8") as f:
                 FileStorage.__objects =  json.load(f)
         except FileExistsError:
-            return
-        
+            FileStorage.__objects = {}
+        except FileNotFoundError:
+            FileStorage.__objects = {}
 
