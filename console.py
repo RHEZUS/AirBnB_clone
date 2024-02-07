@@ -9,18 +9,10 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def precmd(self, line):
-        match = re.match(r'^(\w+)\.(\w+)\(([^)]+)\)$', line)
-        print(match)
-        if match:
-            command = list(match.groups())
-            print(command)
-            if len(command) == 2 and command[1] == "all":
-                line = f"{command[1]} {command[0]}"
-                return line
-            elif len(command) == 2 and command[1] == "count":
-                line = f"{command[1]} {command[0]}"
-            elif len(command) == 3 and command[1] == "show":
-                line = f"{command[1]} {command[0]} {command[2]}"
+        args = line.split('.')
+        if args[1] == "all":
+            line = f"{args[1]} {args[0]}"
+            return line
         return super().precmd(line)
 
     def default(self, line):
