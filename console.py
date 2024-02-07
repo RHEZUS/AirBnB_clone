@@ -8,11 +8,24 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
+    __classes = {
+        "BaseModel",
+        "User",
+        "State",
+        "City",
+        "Place",
+        "Amenity",
+        "Review"
+    }
+
     def precmd(self, line):
         args = line.split('.')
         if args[1] == "all":
             line = f"{args[1]} {args[0]}"
             return line
+
+        result = self.my_split(line)
+        print(result)
         return super().precmd(line)
 
     def default(self, line):
@@ -20,7 +33,6 @@ class HBNBCommand(cmd.Cmd):
         # print("DEF:::", line)
         self.precmd(line)
         
-
     def do_quit(self, arg):
         """Quit command to exit the program\n"""
         return True
