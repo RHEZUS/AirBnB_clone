@@ -8,6 +8,16 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
+
+    def _precmd(self, line):
+        args = line.split('.')
+        if args[1] == "all":
+            line = f"{args[1]} {args[0]}"
+            return line
+        
+
+        return super().precmd(line)
+
     def default(self, line):
         """Catch commands if nothing else matches then."""
         # print("DEF:::", line)

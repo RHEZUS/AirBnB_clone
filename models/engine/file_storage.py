@@ -58,4 +58,3 @@ class FileStorage:
                         for key, value in obj_dict.items()}
             # TODO: should this overwrite or insert?
             FileStorage.__objects = obj_dict
-
