@@ -19,9 +19,22 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def precmd(self, line):
-        result = self.my_split(line)
-        print(result)
+        delimiters = ['.', '(', ')', ',']
+        result = self.split_string(line, delimiters)
+        swap = result[1]
+        result[1] = result[0]
+        result[0] = swap
+        line = " ".join(result)
+        
         return super().precmd(line)
+
+    def split_string(self, input_string, delimiters):
+        pattern = '|'.join(map(re.escape, delimiters))
+        parts = re.split(pattern, input_string)
+
+        parts = [part for part in parts if part]
+
+        return parts
 
     def default(self, line):
         """Catch commands if nothing else matches then."""
