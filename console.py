@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import cmd
+import shlex
 from models.base_model import BaseModel
 import json
 import re
@@ -8,56 +9,50 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    __classes = {
-        "BaseModel",
-        "User",
-        "State",
-        "City",
-        "Place",
-        "Amenity",
-        "Review"
-    }
-
     def default(self, line):
         """Catch commands if nothing else matches then."""
-        self._precmd(line)
+        # print("DEF:::", line)
+        self.precmd(line)
 
-    def _precmd(self, line):
-        # Split the string to get the class, method and arg
-        matches = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
-        if not matches:
+    def precmd(self, line):
+        split_lne = shlex.shlex(line , posix=True)
+        split_lne.whitespace = ['.', '(', ')']
+        split_lne.whitespace_split = True
+        result = list(split_lne)
+        if len(result) < 2:
             return line
-        class_name = matches.group(1)
-        method_name = matches.group(2)
-        args = matches.group(3)
-        print("{} {} {}".format(method_name, class_name, args))
-        # split the arg to get the id of the instance and the arguments
-        uid_and_args = re.search('^"([^"]*)"(?:, (.*))?$', args)
-        if uid_and_args:
-            uid = uid_and_args.group(1)
-            attr_or_dict = uid_and_args.group(2)
-        else :
-            # if the split fails it means there is only the uid
-            uid = args
-            attr_or_dict = False
-        attr_val = ""
-        if method_name == "update" and attr_or_dict:
-            match_dict = re.search('^({.*})$', attr_or_dict)
-            if match_dict:
-                self.update_dict(class_name, uid, match_dict.group(1))
-                return ""
-            match_attr_and_value = re.search(
-            '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
-            if match_attr_and_value:
-                attr_val  = (match_attr_and_value.group(
-                    1) or "") + " " + (match_attr_and_value.group(2) or "")
-        command = "{} {} {} {}".format(method_name, class_name, uid, attr_val) 
-        print(command)
-        self.onecmd(command)
-        return super()._precmd(command)
-        #return command
-    
-    def update_dict(class_name, uid, attr_dict):    
+        class_name = result[0]
+        method_name = result[1]
+        if len(list(result)) == 2:
+            line = "{} {}".format(method_name, class_name)
+            return line
+        args = result[2].split(',', 1)
+        uid = args[0]
+        if len(args) == 1:
+            line = line = "{} {} {}".format(method_name, class_name, uid)
+            return line
+
+        if method_name == 'update' and '{' in args[1]:
+            #print(args[1])
+            args[1].replace('{', '{"')
+            dic_arg =  args[1].replace('{', '{"').replace(', ', '":"').replace('}', '"}')
+            #print(dic_arg)
+            self.update_dict(class_name, uid, str(dic_arg))
+            return ""
+        elif method_name == 'update' and '{' not in args[1]:
+            parts = args[1].split(', ')
+            attr = parts[0] if parts[0] else ""
+            val = parts[1] if parts[1] else ""
+
+            # Format the parts with double quotes
+            line  = '{} {} {}{} "{}"'.format(method_name, class_name, uid, attr,  val)
+            #print(line)
+            return line
+
+        return ""
+
+
+    def update_dict(self, class_name, uid, attr_dict):    
         attr = attr_dict.replace("'", '"')
         my_dict = json.loads(attr)
 
