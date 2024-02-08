@@ -19,22 +19,61 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def precmd(self, line):
-        delimiters = ['.', '(', ')', ',']
-        result = self.split_string(line, delimiters)
-        swap = result[1]
-        result[1] = result[0]
-        result[0] = swap
-        line = " ".join(result)
-        
-        return super().precmd(line)
+        # Split the string to get the class, method and arg
+        matches = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
+        if not matches:
+            return line
+        class_name = matches.group(1)
+        method_name = matches.group(2)
+        args = matches.group(3)
+        print("{} {} {}".format(method_name, class_name, args))
+        # split the arg to get the id of the instance and the arguments
+        uid_and_args = re.search('^"([^"]*)"(?:, (.*))?$', args)
+        if uid_and_args:
+            uid = uid_and_args.group(1)
+            attr_or_dict = uid_and_args.group(2)
+        else :
+            # if the split fails it means there is only the uid
+            uid = args
+            attr_or_dict = False
+        attr_val = ""
+        if method_name == "update" and attr_or_dict:
+            match_dict = re.search('^({.*})$', attr_or_dict)
+            if match_dict:
+                self.update_dict(class_name, uid, match_dict.group(1))
+                return ""
+            match_attr_and_value = re.search(
+            '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
+            if match_attr_and_value:
+                attr_val  = (match_attr_and_value.group(
+                    1) or "") + " " + (match_attr_and_value.group(2) or "")
+        command = "{} {} {} {}".format(method_name, class_name, uid, attr_val) 
+        print(command)
+        self.onecmd(command)
+        return super().precmd(command)
+        #return command
+    
+    def update_dict(class_name, uid, attr_dict):    
+        attr = attr_dict.replace("'", '"')
+        my_dict = json.loads(attr)
 
-    def split_string(self, input_string, delimiters):
-        pattern = '|'.join(map(re.escape, delimiters))
-        parts = re.split(pattern, input_string)
-
-        parts = [part for part in parts if part]
-
-        return parts
+        if not class_name:
+            print("** class name missing **")
+        elif class_name not in storage.classes():
+            print("** class doesn't exist **")
+        elif uid is None:
+            print("** instance id missing **")
+        else:
+            key = "{}.{}".format(class_name, uid)
+            if key not in storage.all():
+                print("** no instance found **")
+            else:
+                attrs = storage.attributes()[class_name]
+                for attr, value in my_dict.items():
+                    if attr in attrs:
+                        value = attrs[attr](value)
+                    setattr(storage.all()[key], attr, value)
+                storage.all()[key].save()
 
     def default(self, line):
         """Catch commands if nothing else matches then."""
