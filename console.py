@@ -18,7 +18,11 @@ class HBNBCommand(cmd.Cmd):
         "Review"
     }
 
-    def precmd(self, line):
+    def default(self, line):
+        """Catch commands if nothing else matches then."""
+        self._precmd(line)
+
+    def _precmd(self, line):
         # Split the string to get the class, method and arg
         matches = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
         if not matches:
@@ -50,7 +54,7 @@ class HBNBCommand(cmd.Cmd):
         command = "{} {} {} {}".format(method_name, class_name, uid, attr_val) 
         print(command)
         self.onecmd(command)
-        return super().precmd(command)
+        return super()._precmd(command)
         #return command
     
     def update_dict(class_name, uid, attr_dict):    
@@ -74,11 +78,6 @@ class HBNBCommand(cmd.Cmd):
                         value = attrs[attr](value)
                     setattr(storage.all()[key], attr, value)
                 storage.all()[key].save()
-
-    def default(self, line):
-        """Catch commands if nothing else matches then."""
-        # print("DEF:::", line)
-        self.precmd(line)
         
     def do_quit(self, arg):
         """Quit command to exit the program\n"""
