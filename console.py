@@ -9,11 +9,6 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    def default(self, line):
-        """Catch commands if nothing else matches then."""
-        # print("DEF:::", line)
-        self.precmd(line)
-
     def precmd(self, line):
         split_lne = shlex.shlex(line , posix=True)
         split_lne.whitespace = ['.', '(', ')']
@@ -100,17 +95,21 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         if not arg:
             print("** class name missing **")
+            return
         else:
             args = arg.split(' ')
             if args[0] not in storage.classes():
                 print("** class doesn't exist **")
+                return
             elif len(args) < 2:
                 print("** instance id missing **")
+                return
             else:
                 key = "{}.{}".format(args[0], args[1])
 
                 if key not in storage.all():
                     print("** no instance found **")
+                    return
                 else:
                     print(storage.all()[key])
     
@@ -118,16 +117,20 @@ class HBNBCommand(cmd.Cmd):
         """Destroy an instance based on the class name and id"""
         if not arg:
             print("** class name missing **")
+            return
         else:
             args = arg.split(' ')
             if args[0] not in storage.classes():
                 print("** class doesn't exist **")
+                return
             elif len(args) < 2:
                 print("** instance id missing **")
+                return
             else:
                 key = "{}.{}".format(args[0], args[1])
                 if key not in storage.all():
                     print("** no instance found **")
+                    return
                 else:
                     del storage.all()[key]
                     storage.save()
@@ -140,6 +143,7 @@ class HBNBCommand(cmd.Cmd):
             args = arg.split(' ')
             if args[0] not in storage.classes():  # Add more class names as needed
                 print("** class doesn't exist **")
+                return
             else:
                 nl = [str(obj) for key, obj in storage.all().items()
                       if type(obj).__name__ == args[0]]
@@ -163,6 +167,8 @@ class HBNBCommand(cmd.Cmd):
         attribute = match.group(3)
         value = match.group(4)
         if not match:
+            print("** class name missing **")
+        elif not classname:
             print("** class name missing **")
         elif classname not in storage.classes():
             print("** class doesn't exist **")

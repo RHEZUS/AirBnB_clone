@@ -24,7 +24,7 @@ class TestAmenity(unittest.TestCase):
     def test_string_representation(self):
         # Test the __str__ method
         city = City()
-        city.name="New Amen"
+        city.name = "New Amen"
         expected_str = "[City] ({}) {}".format(city.id, city.__dict__)
         self.assertEqual(str(city), expected_str)
 
