@@ -22,7 +22,7 @@ class TestAmenity(unittest.TestCase):
 
     def test_string_representation(self):
         # Test the __str__ method
-        amenity = Amenity(name="New Amen")
+        amenity = Amenity()
         expected_str = "[Amenity] ({}) {}".format(amenity.id, amenity.__dict__)
         self.assertEqual(str(amenity), expected_str)
 
@@ -35,7 +35,8 @@ class TestAmenity(unittest.TestCase):
 
     def test_to_dict_method(self):
         # Test the to_dict method
-        amenity = Amenity(name="New Amen")
+        amenity = Amenity()
+        amenity.name="New Amen"
         amenity_dict = amenity.to_dict()
         self.assertIsInstance(amenity_dict, dict)
         self.assertIn('__class__', amenity_dict)
@@ -46,7 +47,7 @@ class TestAmenity(unittest.TestCase):
     
     def test_storage_interaction(self):
         # Test interaction with storage
-        amenity = Amenity(name="New Amen")
+        amenity = Amenity()
         amenity.save()
         self.assertIn(f"{amenity.__class__.__name__}.{amenity.id}", storage.all())
 

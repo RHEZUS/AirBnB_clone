@@ -11,7 +11,8 @@ class TestAmenity(unittest.TestCase):
         self.assertIsInstance(city, City)
         self.assertEqual(city.name, "")
 
-        city = City(name = "Amenity")
+        city = City()
+        city.name = "Amenity"
         self.assertEqual(city.name, "Amenity")
 
     def test_attribute_value(self):
@@ -22,7 +23,8 @@ class TestAmenity(unittest.TestCase):
 
     def test_string_representation(self):
         # Test the __str__ method
-        city = City(name="New Amen")
+        city = City()
+        city.name="New Amen"
         expected_str = "[City] ({}) {}".format(city.id, city.__dict__)
         self.assertEqual(str(city), expected_str)
 
@@ -35,7 +37,8 @@ class TestAmenity(unittest.TestCase):
 
     def test_to_dict_method(self):
         # Test the to_dict method
-        city = City(name="New Amen")
+        city = City()
+        city.name="New Amen"
         city_dict = city.to_dict()
         self.assertIsInstance(city_dict, dict)
         self.assertIn('__class__', city_dict)
@@ -46,7 +49,8 @@ class TestAmenity(unittest.TestCase):
     
     def test_storage_interaction(self):
         # Test interaction with storage
-        city = City(name="New Amen")
+        city = City()
+        city.name="New Amen"
         city.save()
         self.assertIn(f"{city.__class__.__name__}.{city.id}", storage.all())
 
