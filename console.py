@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import cmd
+import shlex
 from models.base_model import BaseModel
 import json
 import re
@@ -32,6 +33,66 @@ class HBNBCommand(cmd.Cmd):
         """Catch commands if nothing else matches then."""
         # print("DEF:::", line)
         self.precmd(line)
+
+    def precmd(self, line):
+        split_lne = shlex.shlex(line , posix=True)
+        split_lne.whitespace = ['.', '(', ')']
+        split_lne.whitespace_split = True
+        result = list(split_lne)
+        if len(result) < 2:
+            return line
+        class_name = result[0]
+        method_name = result[1]
+        if len(list(result)) == 2:
+            line = "{} {}".format(method_name, class_name)
+            return line
+        args = result[2].split(',', 1)
+        uid = args[0]
+        if len(args) == 1:
+            line = line = "{} {} {}".format(method_name, class_name, uid)
+            return line
+
+        if method_name == 'update' and '{' in args[1]:
+            #print(args[1])
+            args[1].replace('{', '{"')
+            dic_arg =  args[1].replace('{', '{"').replace(', ', '":"').replace('}', '"}')
+            #print(dic_arg)
+            self.update_dict(class_name, uid, str(dic_arg))
+            return ""
+        elif method_name == 'update' and '{' not in args[1]:
+            parts = args[1].split(', ')
+            attr = parts[0] if parts[0] else ""
+            val = parts[1] if parts[1] else ""
+
+            # Format the parts with double quotes
+            line  = '{} {} {}{} "{}"'.format(method_name, class_name, uid, attr,  val)
+            #print(line)
+            return line
+
+        return ""
+
+
+    def update_dict(self, class_name, uid, attr_dict):    
+        attr = attr_dict.replace("'", '"')
+        my_dict = json.loads(attr)
+
+        if not class_name:
+            print("** class name missing **")
+        elif class_name not in storage.classes():
+            print("** class doesn't exist **")
+        elif uid is None:
+            print("** instance id missing **")
+        else:
+            key = "{}.{}".format(class_name, uid)
+            if key not in storage.all():
+                print("** no instance found **")
+            else:
+                attrs = storage.attributes()[class_name]
+                for attr, value in my_dict.items():
+                    if attr in attrs:
+                        value = attrs[attr](value)
+                    setattr(storage.all()[key], attr, value)
+                storage.all()[key].save()
         
     def do_quit(self, arg):
         """Quit command to exit the program\n"""
