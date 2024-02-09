@@ -38,7 +38,7 @@ class TestAmenity(unittest.TestCase):
     def test_to_dict_method(self):
         # Test the to_dict method
         review = Review()
-        review.name="New Amen"
+        review.name = "New Amen"
         review_dict = review.to_dict()
         self.assertIsInstance(review_dict, dict)
         self.assertIn('__class__', review_dict)

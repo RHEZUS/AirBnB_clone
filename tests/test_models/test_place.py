@@ -36,7 +36,7 @@ class TestPlace(unittest.TestCase):
     def test_to_dict_method(self):
         # Test the to_dict method
         place = Place()
-        city.name="New Amen"
+        city.name = "New Amen"
         place_dict = place.to_dict()
         self.assertIsInstance(place_dict, dict)
         self.assertIn('__class__', place_dict)
