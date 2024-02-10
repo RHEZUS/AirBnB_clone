@@ -6,8 +6,13 @@ import json
 import re
 from models import storage
 
+"""
+Contains the HBNBCommand module
+"""
+
 
 def parse(arg):
+    """parses a string to format it"""
     curly_braces = re.search(r"\{(.*?)\}", arg)
     brackets = re.search(r"\[(.*?)\]", arg)
     if curly_braces is None:
@@ -26,6 +31,7 @@ def parse(arg):
 
 
 class HBNBCommand(cmd.Cmd):
+    """HBNBCommand class"""
 
     prompt = "(hbnb) "
 
@@ -55,6 +61,7 @@ class HBNBCommand(cmd.Cmd):
 
 
     def update_dict(self, class_name, uid, attr_dict):
+        """update dictionnnary arguments"""
         attr = attr_dict.replace("'", '"')
         my_dict = json.loads(attr)
 
