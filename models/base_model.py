@@ -26,23 +26,23 @@ class BaseModel:
                 if key != '__class__':
                     setattr(self, key, value)
 
-    
     def __str__(self):
         """Return the string representation of a class"""
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
-    
+        return "[{}] ({}) {}".format(
+            self.__class__.__name__, self.id, self.__dict__)
+
     def save(self):
         """Saves a model in the storage"""
         self.updated_at = datetime.now()
         storage.save()
-        
 
     def to_dict(self):
         """Returns a dictionary representation of the class"""
         diction = {}
         for key, value in self.__dict__.items():
             if key == 'created_at' or key == 'updated_at':
-                diction[key] = datetime.strftime(value, "%Y-%m-%dT%H:%M:%S.%f") if value else None
+                diction[key] = datetime.strftime(
+                    value, "%Y-%m-%dT%H:%M:%S.%f") if value else None
             elif value is not None:
                 diction[key] = value
 

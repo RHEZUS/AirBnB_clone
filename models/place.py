@@ -2,6 +2,7 @@
 """Define Place"""
 from models.base_model import BaseModel
 
+
 class Place(BaseModel):
     """Represent place withe the following attributes
     city_id, user_id, name, description, number_rooms,

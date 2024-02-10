@@ -2,6 +2,7 @@
 """Define Amenity"""
 from models.base_model import BaseModel
 
+
 class Amenity(BaseModel):
     """An Amenity with an empty string"""
 
