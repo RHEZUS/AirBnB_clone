@@ -61,3 +61,6 @@ class TestAmenity(unittest.TestCase):
         review = Review()
         self.assertIsInstance(review, Review)
         self.assertIsInstance(review, BaseModel)
+
+if __name__ == "__main__":
+    unittest.main()

@@ -89,3 +89,6 @@ class TestUser(unittest.TestCase):
         user = User()
         self.assertIsInstance(user, User)
         self.assertIsInstance(user, BaseModel)
+
+if __name__ == "__main__":
+    unittest.main()

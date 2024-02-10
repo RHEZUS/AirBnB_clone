@@ -60,3 +60,6 @@ class TestAmenity(unittest.TestCase):
         city = City()
         self.assertIsInstance(city, City)
         self.assertIsInstance(city, BaseModel)
+
+if __name__ == "__main__":
+    unittest.main()

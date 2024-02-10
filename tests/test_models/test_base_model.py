@@ -63,3 +63,6 @@ class TestBase(unittest.TestCase):
     def test_edge_cases(self):
         # Test edge cases
         pass
+
+if __name__ == "__main__":
+    unittest.main()
