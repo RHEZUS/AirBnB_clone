@@ -84,23 +84,11 @@ class HBNBCommand(cmd.Cmd):
                 storage.all()[key].save()
 
     def do_quit(self, arg):
-        """Handles the 'quit' command
-
-        Args:
-            line(args): input argument for quiting
-            the terminal
-
-        """
+        """Quit command to exit the program."""
         return True
 
     def do_EOF(self, arg):
-        """Quits command interpreter with ctrl+d
-
-         Args:
-            line(args): input argument for quiting
-            the terminal
-
-        """
+        """Quits command interpreter with ctrl+d"""
         print()
         return True
 
@@ -109,64 +97,47 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of @cls_name class,
-        and prints the new instance's ID.
-
-        Args:
-            line(args): Arguments to enter with command: <class name>
-            Example: 'create User'
-
+        """Usage: create <class>
+        Create a new class instance and print its id.
         """
-        if not arg:
+        args = parse(arg)
+        if len(args) == 0:
             print("** class name missing **")
-        elif arg not in storage.classes():
+        elif args[0] not in storage.classes():
             print("** class doesn't exist **")
         else:
-            new_model = storage.classes()[arg]()
+            new_model = storage.classes()[args[0]]()
             new_model.save()
             print(new_model.id)
 
     def do_show(self, arg):
-        """Prints a string representation of an instance.
-
-        Args:
-            line(line): to enter with command <class name> <id>
-            Example: 'show User 1234-1234-1234'
-
+        """Usage: show <class> <id> or <class>.show(<id>)
+        Display the string representation of a class instance of a given id.
         """
-        if not arg:
+        args = parse(arg)
+        if len(args) == 0:
             print("** class name missing **")
             return
+        elif args[0] not in storage.classes():
+            print("** class doesn't exist **")
+            return
+        elif len(args) == 1:
+            print("** instance id missing **")
+            return
+        elif "{}.{}".format(args[0], args[1]) not in storage.all():
+            print("** no instance found **")
+            return
         else:
-            args = arg.split(' ')
-            if args[0] not in storage.classes():
-                print("** class doesn't exist **")
-                return
-            elif len(args) < 2:
-                print("** instance id missing **")
-                return
-            else:
-                key = "{}.{}".format(args[0], args[1])
-
-                if key not in storage.all():
-                    print("** no instance found **")
-                    return
-                else:
-                    print(storage.all()[key])
+            print(storage.all()["{}.{}".format(args[0], args[1])])
 
     def do_destroy(self, arg):
-        """Deletes an instance of a certain class.
-
-        Args:
-            line(args): to enter with command: <class name> <id>
-            Example: 'destroy User 1234-1234-1234'
-
-        """
-        if not arg:
+        """Usage: destroy <class> <id> or <class>.destroy(<id>)
+        Delete a class instance of a given id."""
+        args = parse(arg)
+        if len(args) == 0:
             print("** class name missing **")
             return
         else:
-            args = arg.split(' ')
             if args[0] not in storage.classes():
                 print("** class doesn't exist **")
                 return
@@ -183,16 +154,11 @@ class HBNBCommand(cmd.Cmd):
                     storage.save()
 
     def do_all(self, arg):
-        """Shows all instances, or instances of a certain class
-
-        Args: 
-            line(args): enter with command (optional): <class name>
-            Example: 'all' OR 'all User'
-
-        """
-
-        if arg:
-            args = arg.split(' ')
+        """Usage: all or all <class> or <class>.all()
+        Display string representations of all instances of a given class.
+        If no class is specified, displays all instantiated objects."""
+        args = parse(arg)
+        if len(args) != 0:
             # Add more class names as needed
             if args[0] not in storage.classes():
                 print("** class doesn't exist **")
@@ -255,22 +221,14 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def do_count(self, line):
-        """
-        Counts the instances of a class.
-        Args: 
-            line(args): enter with command (optional): <class name>
-            Example: 'all' OR 'all User'
-        """
-        words = line.split(' ')
-        if not words[0]:
-            print("** class name missing **")
-        elif words[0] not in storage.classes():
-            print("** class doesn't exist **")
-        else:
-            matches = [
-                k for k in storage.all() if k.startswith(
-                    words[0] + '.')]
-            print(len(matches))
+        """Usage: count <class> or <class>.count()
+        Retrieve the number of instances of a given class."""
+        words = parse(line)
+        
+        matches = [
+            k for k in storage.all() if k.startswith(
+                words[0] + '.')]
+        print(len(matches))
 
 
 if __name__ == '__main__':
