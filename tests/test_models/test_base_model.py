@@ -6,6 +6,7 @@ import datetime
 from models.base_model import BaseModel
 from models import storage
 
+
 class TestBase(unittest.TestCase):
 
     def test_initialization_no_kwargs(self):
@@ -13,7 +14,6 @@ class TestBase(unittest.TestCase):
         self.assertIsInstance(uuid.UUID(base.id), uuid.UUID)
         self.assertIsInstance(base.created_at, datetime.datetime)
         self.assertIsInstance(base.updated_at, datetime.datetime)
-
 
     def test_initialise_with_kwargs(self):
         kwargs = {
@@ -33,9 +33,9 @@ class TestBase(unittest.TestCase):
             'updated_at': '2022-02-15T12:34:56.789012',
         }
         base = BaseModel(**kwargs)
-        self.assertEqual(str(base), "[BaseModel] ({}) {}".format(kwargs['id'], base.__dict__))
-    
-    
+        self.assertEqual(str(base), "[BaseModel] ({}) {}".format
+                         (kwargs['id'], base.__dict__))
+
     def test_save_method(self):
         base = BaseModel()
         original_updated_at = base.updated_at
@@ -54,7 +54,6 @@ class TestBase(unittest.TestCase):
         self.assertIn('created_at', base_dict)
         self.assertIn('updated_at', base_dict)
 
-
     def test_storage_interaction(self):
         base = BaseModel()
         base.save()
@@ -64,4 +63,3 @@ class TestBase(unittest.TestCase):
     def test_edge_cases(self):
         # Test edge cases
         pass
-

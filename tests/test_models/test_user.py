@@ -6,6 +6,7 @@ from models.user import User
 from models import storage
 from models.base_model import BaseModel
 
+
 class TestUser(unittest.TestCase):
 
     def test_initialization(self):
@@ -80,7 +81,8 @@ class TestUser(unittest.TestCase):
         # Test interaction with storage
         user = User()
         user.save()
-        self.assertIn("{}.{}".format(user.__class__.__name__, user.id), storage.all())
+        self.assertIn("{}.{}".format(
+            user.__class__.__name__, user.id), storage.all())
 
     def test_inheritance(self):
         # Test inheritance from BaseModel

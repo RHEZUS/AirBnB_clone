@@ -5,6 +5,7 @@ from models.review import Review
 from models import storage
 from models.base_model import BaseModel
 
+
 class TestAmenity(unittest.TestCase):
     def test_initialization_no_kwargs(self):
         review = Review()
@@ -24,7 +25,7 @@ class TestAmenity(unittest.TestCase):
     def test_string_representation(self):
         # Test the __str__ method
         review = Review()
-        review.name="New Amen"
+        review.name = "New Amen"
         expected_str = "[Review] ({}) {}".format(review.id, review.__dict__)
         self.assertEqual(str(review), expected_str)
 
@@ -50,9 +51,10 @@ class TestAmenity(unittest.TestCase):
     def test_storage_interaction(self):
         # Test interaction with storage
         review = Review()
-        review.name="New Amen"
+        review.name = "New Amen"
         review.save()
-        self.assertIn(f"{review.__class__.__name__}.{review.id}", storage.all())
+        self.assertIn(
+            f"{review.__class__.__name__}.{review.id}", storage.all())
 
     def test_inheritance(self):
         # Test inheritance from BaseModel

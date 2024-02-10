@@ -5,6 +5,7 @@ from models.city import City
 from models import storage
 from models.base_model import BaseModel
 
+
 class TestAmenity(unittest.TestCase):
     def test_initialization_no_kwargs(self):
         city = City()
@@ -19,7 +20,7 @@ class TestAmenity(unittest.TestCase):
         city = City()
 
         city.name = "New name"
-        self.assertEqual(city.name, "New name") 
+        self.assertEqual(city.name, "New name")
 
     def test_string_representation(self):
         # Test the __str__ method
@@ -33,24 +34,24 @@ class TestAmenity(unittest.TestCase):
         city = City()
         original_updated_at = city.updated_at
         city.save()
-        self.assertNotEqual(city.updated_at, original_updated_at)   
+        self.assertNotEqual(city.updated_at, original_updated_at)
 
     def test_to_dict_method(self):
         # Test the to_dict method
         city = City()
-        city.name="New Amen"
+        city.name = "New Amen"
         city_dict = city.to_dict()
         self.assertIsInstance(city_dict, dict)
         self.assertIn('__class__', city_dict)
         self.assertIn('id', city_dict)
         self.assertIn('created_at', city_dict)
         self.assertIn('updated_at', city_dict)
-        self.assertEqual(city_dict['name'], "New Amen")    
-    
+        self.assertEqual(city_dict['name'], "New Amen")
+
     def test_storage_interaction(self):
         # Test interaction with storage
         city = City()
-        city.name="New Amen"
+        city.name = "New Amen"
         city.save()
         self.assertIn(f"{city.__class__.__name__}.{city.id}", storage.all())
 

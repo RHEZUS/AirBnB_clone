@@ -5,13 +5,14 @@ from models.place import Place
 from models import storage
 from models.base_model import BaseModel
 
+
 class TestPlace(unittest.TestCase):
     def test_initialization_no_kwargs(self):
         place = Place()
         self.assertIsInstance(place, Place)
         self.assertEqual(place.name, "")
 
-        place = Place(name = "Amenity")
+        place = Place(name="Amenity")
         self.assertEqual(place.name, "Amenity")
 
     def test_attribute_value(self):
@@ -36,7 +37,7 @@ class TestPlace(unittest.TestCase):
     def test_to_dict_method(self):
         # Test the to_dict method
         place = Place()
-        city.name = "New Amen"
+        place.name = "New Amen"
         place_dict = place.to_dict()
         self.assertIsInstance(place_dict, dict)
         self.assertIn('__class__', place_dict)
@@ -48,9 +49,10 @@ class TestPlace(unittest.TestCase):
     def test_storage_interaction(self):
         # Test interaction with storage
         place = Place()
-        place.name="New Amen"
+        place.name = "New Amen"
         place.save()
-        self.assertIn(f"{place.__class__.__name__}.{place.id}", storage.all())
+        self.assertIn(
+            f"{place.__class__.__name__}.{place.id}", storage.all())
 
     def test_inheritance(self):
         # Test inheritance from BaseModel

@@ -5,6 +5,7 @@ from models.state import State
 from models import storage
 from models.base_model import BaseModel
 
+
 class TestAmenity(unittest.TestCase):
     def test_initialization_no_kwargs(self):
         state = State()
@@ -38,7 +39,7 @@ class TestAmenity(unittest.TestCase):
     def test_to_dict_method(self):
         # Test the to_dict method
         state = State()
-        state.name="New Amen"
+        state.name = "New Amen"
         state_dict = state.to_dict()
         self.assertIsInstance(state_dict, dict)
         self.assertIn('__class__', state_dict)
@@ -50,7 +51,7 @@ class TestAmenity(unittest.TestCase):
     def test_storage_interaction(self):
         # Test interaction with storage
         state = State()
-        state.name="New Amen"
+        state.name = "New Amen"
         state.save()
         self.assertIn(f"{state.__class__.__name__}.{state.id}", storage.all())
 
