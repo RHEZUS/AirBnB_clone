@@ -59,7 +59,6 @@ class HBNBCommand(cmd.Cmd):
     __classes = ['BaseModel', 'User', 'Amenity',
                  'Place', 'City', 'State', 'Review']
 
-
     def update_dict(self, class_name, uid, attr_dict):
         """update dictionnnary arguments"""
         attr = attr_dict.replace("'", '"')
@@ -224,7 +223,7 @@ class HBNBCommand(cmd.Cmd):
         """Usage: count <class> or <class>.count()
         Retrieve the number of instances of a given class."""
         words = parse(line)
-        
+
         matches = [
             k for k in storage.all() if k.startswith(
                 words[0] + '.')]
