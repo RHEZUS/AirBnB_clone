@@ -5,6 +5,7 @@ from models.amenity import Amenity
 from models import storage
 from models.base_model import BaseModel
 
+"""tests tests"""
 
 class TestAmenity(unittest.TestCase):
     """Test for Amenity class"""
