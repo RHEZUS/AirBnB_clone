@@ -7,6 +7,7 @@ from models.base_model import BaseModel
 
 
 class TestAmenity(unittest.TestCase):
+    """Test for Amenity class"""
     def test_initialization_no_kwargs(self):
         amenity = Amenity()
         self.assertIsInstance(amenity, Amenity)
