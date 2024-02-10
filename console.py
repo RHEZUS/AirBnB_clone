@@ -78,11 +78,23 @@ class HBNBCommand(cmd.Cmd):
                 storage.all()[key].save()
 
     def do_quit(self, arg):
-        """Quit command to exit the program\n"""
+        """Handles the 'quit' command
+
+        Args:
+            line(args): input argument for quiting
+            the terminal
+
+        """
         return True
 
     def do_EOF(self, arg):
-        """Exit the program using EOF (Ctrl+D)\n """
+        """Quits command interpreter with ctrl+d
+
+         Args:
+            line(args): input argument for quiting
+            the terminal
+
+        """
         print()
         return True
 
@@ -91,6 +103,14 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
+        """Creates a new instance of @cls_name class,
+        and prints the new instance's ID.
+
+        Args:
+            line(args): Arguments to enter with command: <class name>
+            Example: 'create User'
+
+        """
         if not arg:
             print("** class name missing **")
         elif arg not in storage.classes():
@@ -101,6 +121,13 @@ class HBNBCommand(cmd.Cmd):
             print(new_model.id)
 
     def do_show(self, arg):
+        """Prints a string representation of an instance.
+
+        Args:
+            line(line): to enter with command <class name> <id>
+            Example: 'show User 1234-1234-1234'
+
+        """
         if not arg:
             print("** class name missing **")
             return
@@ -122,7 +149,13 @@ class HBNBCommand(cmd.Cmd):
                     print(storage.all()[key])
 
     def do_destroy(self, arg):
-        """Destroy an instance based on the class name and id"""
+        """Deletes an instance of a certain class.
+
+        Args:
+            line(args): to enter with command: <class name> <id>
+            Example: 'destroy User 1234-1234-1234'
+
+        """
         if not arg:
             print("** class name missing **")
             return
@@ -144,8 +177,13 @@ class HBNBCommand(cmd.Cmd):
                     storage.save()
 
     def do_all(self, arg):
-        """Prints all string representation of
-        instances based on the class name."""
+        """Shows all instances, or instances of a certain class
+
+        Args: 
+            line(args): enter with command (optional): <class name>
+            Example: 'all' OR 'all User'
+
+        """
 
         if arg:
             args = arg.split(' ')
@@ -211,7 +249,11 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def do_count(self, line):
-        """Counts the instances of a class.
+        """
+        Counts the instances of a class.
+        Args: 
+            line(args): enter with command (optional): <class name>
+            Example: 'all' OR 'all User'
         """
         words = line.split(' ')
         if not words[0]:
