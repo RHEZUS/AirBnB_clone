@@ -53,7 +53,6 @@ class HBNBCommand(cmd.Cmd):
     __classes = ['BaseModel', 'User', 'Amenity',
                  'Place', 'City', 'State', 'Review']
 
-    l_c = ['create', 'show', 'update', 'all', 'destroy', 'count']
 
     def update_dict(self, class_name, uid, attr_dict):
         attr = attr_dict.replace("'", '"')

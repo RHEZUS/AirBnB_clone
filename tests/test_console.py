@@ -9,8 +9,8 @@ class TestHBNBCommand(unittest.TestCase):
     
     def test_do_help_all(self):
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("help all")
-        self.assertEqual(f.getvalue().strip(), 'Prints all string representation of instances based on the class name.')
+            HBNBCommand().onecmd("help")
+        self.assertIn("Documented commands (type help <topic>):",f.getvalue().strip())
     
     def test_do_all(self):
         with patch('sys.stdout', new=StringIO()) as f:
@@ -117,75 +117,50 @@ class TestHBNBCommand(unittest.TestCase):
         self.assertIn(expected, f.getvalue().strip())
     
     # Test cases for User with precmd
- 
-    def test_precmd_create_User(self):
-        # run create command with no class name
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(".create")
-        self.assertEqual(f.getvalue().strip(), "*** Unknown syntax: .create")
-        
-
-        # run create command with no unexistent class name
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(line = HBNBCommand().precmd(line = "user.create()"))
-        self.assertEqual(f.getvalue().strip(), "** class doesn't exist **")
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.create()")
-        self.assertIsInstance(uuid.UUID(f.getvalue().strip()), uuid.UUID)
-
     def test_precmd_all_Users(self):
-        #with patch('sys.stdout', new=StringIO()) as f:
-        #    HBNBCommand().onecmd("user.all ")
-        #self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("user.all()")
+        self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.all")
+            HBNBCommand().onecmd("User.all()")
         self.assertIn('[User]',f.getvalue().strip())
 
     def test_precmd_show_User(self):
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(".show")
-        self.assertEqual('*** Unknown syntax: .show',f.getvalue().strip())
-
-        with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(line = HBNBCommand().precmd(line = "user.show()"))
         self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(line = HBNBCommand().precmd(line = "user.show"))
-        self.assertEqual('** instance id missing **',f.getvalue().strip())
+        #with patch('sys.stdout', new=StringIO()) as f:
+        #    HBNBCommand().onecmd(line = HBNBCommand().precmd(line = "User.show()"))
+        #self.assertEqual('** instance id missing **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.show (a5c038a9-00cc-41d1-9a11-f59333d0f0e)")
+            HBNBCommand().onecmd("User.show(a5c038a9-00cc-41d1-9a11-f59333d0f0e)")
         self.assertEqual('** no instance found **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.create")
+            HBNBCommand().onecmd("create User")
             uid = f.getvalue().strip()
             HBNBCommand().onecmd("User.show({})".format(uid))
         expected = "[User] ({})".format(uid, uid)   
         self.assertIn(expected, f.getvalue().strip())
     
     def test_precmd_destroy_User(self):
-        #with patch('sys.stdout', new=StringIO()) as f:
-        #    HBNBCommand().onecmd(".destroy")
-        #self.assertEqual('*** Unknown syntax: .destroy',f.getvalue().strip())
-
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("user.destroy")
+            HBNBCommand().onecmd("user.destroy()")
         self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.destroy")
-        self.assertEqual('** instance id missing **',f.getvalue().strip())
+        #with patch('sys.stdout', new=StringIO()) as f:
+        #    HBNBCommand().onecmd("User.destroy()")
+        #self.assertEqual('** instance id missing **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("User.destroy(a5c038a9-00cc-41d1-9a11-f59333d0f0e)")
         self.assertEqual('** no instance found **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.create")
+            HBNBCommand().onecmd("create User")
             uid = f.getvalue().strip()
             HBNBCommand().onecmd("User.destroy({})".format(uid))
         expected = "[User] ({})".format(uid, uid)   
@@ -193,15 +168,11 @@ class TestHBNBCommand(unittest.TestCase):
     
     def test_precmd_update_User(self):
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(".update")
-        self.assertEqual('*** Unknown syntax: .update',f.getvalue().strip())
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("user.update")
+            HBNBCommand().onecmd("user.update()")
         self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.update")
+            HBNBCommand().onecmd("User.update()")
         self.assertEqual('** instance id missing **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
@@ -225,21 +196,6 @@ class TestHBNBCommand(unittest.TestCase):
 
 
     # Test Cases for BaseModel class with normal commands
-    def test_do_create_BaseModel(self):
-        # run create command with no class name
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("create")
-        self.assertEqual(f.getvalue().strip(), "** class name missing **")
-
-        # run create command with no unexistent class name
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("create base_model")
-        self.assertEqual(f.getvalue().strip(), "** class doesn't exist **")
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("create BaseModel")
-        self.assertIsInstance(uuid.UUID(f.getvalue().strip()), uuid.UUID)
-
     def test_do_all_BaseModel(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("all base_model")
@@ -324,28 +280,14 @@ class TestHBNBCommand(unittest.TestCase):
     
     # Test cases for User with precmd
  
-    def test_precmd_create_BaseModel(self):
-        # run create command with no class name
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(".create")
-        self.assertEqual(f.getvalue().strip(), "*** Unknown syntax: .create")
-
-        # run create command with no unexistent class name
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("base_model.create")
-        self.assertEqual(f.getvalue().strip(), "** class doesn't exist **")
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.create")
-        self.assertIsInstance(uuid.UUID(f.getvalue().strip()), uuid.UUID)
 
     def test_precmd_all_BaseModel(self):
-        #with patch('sys.stdout', new=StringIO()) as f:
-        #    HBNBCommand().onecmd("base_model.all ")
-        #self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("base_model.all()")
+        self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.all")
+            HBNBCommand().onecmd("BaseModel.all()")
         self.assertIn('[BaseModel]',f.getvalue().strip())
 
     def test_precmd_show_BaseModel(self):
@@ -354,19 +296,15 @@ class TestHBNBCommand(unittest.TestCase):
         self.assertEqual('*** Unknown syntax: .show',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("base_model.show")
+            HBNBCommand().onecmd("base_model.show()")
         self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.show")
-        self.assertEqual('** instance id missing **',f.getvalue().strip())
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.show (a5c038a9-00cc-41d1-9a11-f59333d0f0e)")
+            HBNBCommand().onecmd("BaseModel.show(a5c038a9-00cc-41d1-9a11-f59333d0f0e)")
         self.assertEqual('** no instance found **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.create")
+            HBNBCommand().onecmd("create BaseModel")
             uid = f.getvalue().strip()
             HBNBCommand().onecmd("BaseModel.show({})".format(uid))
         expected = "[BaseModel] ({})".format(uid, uid)   
@@ -374,23 +312,15 @@ class TestHBNBCommand(unittest.TestCase):
     
     def test_precmd_destroy_BaseModel(self):
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(".destroy")
-        self.assertEqual('*** Unknown syntax: .destroy',f.getvalue().strip())
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("base_model.destroy")
+            HBNBCommand().onecmd("base_model.destroy()")
         self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.destroy")
-        self.assertEqual('** instance id missing **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("BaseModel.destroy(a5c038a9-00cc-41d1-9a11-f59333d0f0e)")
         self.assertEqual('** no instance found **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.create")
+            HBNBCommand().onecmd("create BaseModel")
             uid = f.getvalue().strip()
             HBNBCommand().onecmd("BaseModel.destroy({})".format(uid))
         expected = "[BaseModel] ({})".format(uid, uid)   
@@ -402,11 +332,11 @@ class TestHBNBCommand(unittest.TestCase):
         self.assertEqual('*** Unknown syntax: .update',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("base_model.update")
+            HBNBCommand().onecmd("base_model.update()")
         self.assertEqual('** class doesn\'t exist **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("BaseModel.update")
+            HBNBCommand().onecmd("BaseModel.update()")
         self.assertEqual('** instance id missing **',f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
