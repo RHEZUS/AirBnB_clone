@@ -6,6 +6,7 @@ import json
 import re
 from models import storage
 
+
 def parse(arg):
     curly_braces = re.search(r"\{(.*?)\}", arg)
     brackets = re.search(r"\[(.*?)\]", arg)
@@ -22,10 +23,11 @@ def parse(arg):
         retl = [i.strip(",") for i in lexer]
         retl.append(curly_braces.group())
         return retl
+
+
 class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
-
 
     def default(self, arg):
         """Default behavior for cmd module when input is invalid"""
@@ -48,15 +50,12 @@ class HBNBCommand(cmd.Cmd):
         print("*** Unknown syntax: {}".format(arg))
         return False
 
-
     __classes = ['BaseModel', 'User', 'Amenity',
                  'Place', 'City', 'State', 'Review']
 
     l_c = ['create', 'show', 'update', 'all', 'destroy', 'count']
-    
-    
-    
-    def update_dict(self, class_name, uid, attr_dict):    
+
+    def update_dict(self, class_name, uid, attr_dict):
         attr = attr_dict.replace("'", '"')
         my_dict = json.loads(attr)
 
@@ -77,7 +76,7 @@ class HBNBCommand(cmd.Cmd):
                         value = attrs[attr](value)
                     setattr(storage.all()[key], attr, value)
                 storage.all()[key].save()
-        
+
     def do_quit(self, arg):
         """Quit command to exit the program\n"""
         return True
@@ -90,7 +89,7 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Do nothing on an empty line\n """
         pass
-    
+
     def do_create(self, arg):
         if not arg:
             print("** class name missing **")
@@ -121,7 +120,7 @@ class HBNBCommand(cmd.Cmd):
                     return
                 else:
                     print(storage.all()[key])
-    
+
     def do_destroy(self, arg):
         """Destroy an instance based on the class name and id"""
         if not arg:
@@ -144,13 +143,14 @@ class HBNBCommand(cmd.Cmd):
                     del storage.all()[key]
                     storage.save()
 
-
     def do_all(self, arg):
-        """Prints all string representation of instances based on the class name."""
-    
+        """Prints all string representation of
+        instances based on the class name."""
+
         if arg:
             args = arg.split(' ')
-            if args[0] not in storage.classes():  # Add more class names as needed
+            # Add more class names as needed
+            if args[0] not in storage.classes():
                 print("** class doesn't exist **")
                 return
             else:
@@ -160,7 +160,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
             print(new_list)
-            
 
     def do_update(self, arg):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
@@ -211,7 +210,6 @@ class HBNBCommand(cmd.Cmd):
                     obj.__dict__[k] = v
         storage.save()
 
-
     def do_count(self, line):
         """Counts the instances of a class.
         """
@@ -225,10 +223,6 @@ class HBNBCommand(cmd.Cmd):
                 k for k in storage.all() if k.startswith(
                     words[0] + '.')]
             print(len(matches))
-
-
-
-
 
 
 if __name__ == '__main__':
