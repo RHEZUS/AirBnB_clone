@@ -1,14 +1,13 @@
 #!/usr/bin/python3
+"""
+Contains the HBNBCommand module
+"""
 import cmd
 import shlex
 import ast
 import json
 import re
 from models import storage
-
-"""
-Contains the HBNBCommand module
-"""
 
 
 def parse(arg):
