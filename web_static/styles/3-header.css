@@ -3,12 +3,11 @@ header{
     height: 70px;
     width: 100%;
     border-bottom: 1px solid #CCCCCC;
-    align-items: center;
 }
 
 header .image{
     background-image: url('../images/logo.png');
-    background-size: 100px;
+    background-size: 142px;
     background-repeat: no-repeat;
     background-position-y:center;
     width: auto;
