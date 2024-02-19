@@ -7,16 +7,13 @@
 }
 
 article {
-	display: flex;
+	display: inline-block;
 	width: 390px;
-	flex: none;
-	flex-wrap: wrap;
-	flex-direction: row;
-	align-content: flex-start;
-    padding: 10px 20px 20px 20px;
+	padding: 20px;
 	margin: 20px;
 	border: 1px solid #FF5A5F;
 	border-radius: 4px;
+	text-align: center;
 }
 
 .headline {
